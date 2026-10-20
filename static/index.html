@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CogniStudy Pro™ — Enterprise Autonomous RAG Knowledge Platform</title>
+    
+    <!-- Google Fonts & Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="./static/style.css">
+    
+    <!-- Markdown Parser -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+
+    <!-- App Header -->
+    <header class="app-header">
+        <div class="brand-wrapper">
+            <div class="brand-icon">
+                <i class="bi bi-cpu-fill"></i>
+            </div>
+            <div>
+                <span class="brand-title">CogniStudy Pro™</span>
+                <span class="brand-badge">Enterprise RAG</span>
+            </div>
+        </div>
+
+        <div class="header-actions">
+            <div class="status-badge" id="systemStatus">
+                <span class="status-dot"></span>
+                <span id="statusText">Connecting...</span>
+            </div>
+
+            <button class="btn-header" id="btnTelegramModal" title="Telegram Bot Integration">
+                <i class="bi bi-telegram" style="color: #38bdf8;"></i>
+                Telegram Bot
+            </button>
+
+            <button class="btn-header btn-primary-header" id="btnOpenQuizModal">
+                <i class="bi bi-lightning-charge-fill"></i>
+                Generate Quiz
+            </button>
+
+            <a href="/docs" target="_blank" class="btn-header" title="Interactive OpenAPI Docs">
+                <i class="bi bi-journal-code"></i>
+                API Docs
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="app-container">
+
+        <!-- Sidebar -->
+        <aside class="app-sidebar">
+            <!-- Study Personas -->
+            <div>
+                <div class="section-label">
+                    <span>Active Study Persona</span>
+                    <i class="bi bi-sliders"></i>
+                </div>
+                <div class="mode-selector">
+                    <div class="mode-card active" data-mode="student" id="modeCardStudent">
+                        <div class="mode-icon">🎓</div>
+                        <div class="mode-info">
+                            <h4>Professor / Student</h4>
+                            <p>First-principles explanations, analogies, step-by-step logic, and definitions.</p>
+                        </div>
+                    </div>
+
+                    <div class="mode-card" data-mode="executive" id="modeCardExecutive">
+                        <div class="mode-icon">💼</div>
+                        <div class="mode-info">
+                            <h4>Executive / Pro</h4>
+                            <p>High-level TL;DR, strategic takeaways, risks, and actionable recommendations.</p>
+                        </div>
+                    </div>
+
+                    <div class="mode-card" data-mode="researcher" id="modeCardResearcher">
+                        <div class="mode-icon">🔬</div>
+                        <div class="mode-info">
+                            <h4>Deep Researcher</h4>
+                            <p>Scholarly rigor, empirical evidence, method nuances, and exact quotations.</p>
+                        </div>
+                    </div>
+
+                    <div class="mode-card" data-mode="exam_cram" id="modeCardExamCram">
+                        <div class="mode-icon">⚡</div>
+                        <div class="mode-info">
+                            <h4>Exam Cram Coach</h4>
+                            <p>High-yield facts, mnemonics, active recall flashcards, and test pitfalls.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upload Dropzone -->
+            <div>
+                <div class="section-label">
+                    <span>Knowledge Ingestion</span>
+                    <i class="bi bi-cloud-arrow-up"></i>
+                </div>
+                <div class="dropzone" id="dropzone">
+                    <i class="bi bi-file-earmark-arrow-up dropzone-icon"></i>
+                    <h5>Drop PDF, DOCX, or TXT</h5>
+                    <p>Click or drag documents to index</p>
+                    <input type="file" id="fileInput" accept=".pdf,.docx,.doc,.txt,.md,.csv" style="display: none;">
+                </div>
+                <div id="uploadProgress" style="display: none; margin-top: 8px;">
+                    <div style="font-size: 11px; color: var(--accent-cyan); margin-bottom: 4px;">Indexing semantic chunks...</div>
+                    <div style="height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden;">
+                        <div id="progressBar" style="height: 100%; width: 100%; background: linear-gradient(90deg, #6366f1, #06b6d4); animation: pulse 1.5s infinite;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Indexed Documents -->
+            <div>
+                <div class="section-label">
+                    <span>Document Library</span>
+                    <span id="docCountBadge" style="font-size: 10px; color: var(--text-muted);">0 docs</span>
+                </div>
+                <div class="doc-list" id="docList">
+                    <div class="empty-docs">No documents indexed yet.</div>
+                </div>
+                <button class="btn-clear-docs" id="btnClearIndex">
+                    <i class="bi bi-trash3"></i> Clear Knowledge Base
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Chat -->
+        <main class="chat-main">
+            <div class="chat-messages" id="chatMessages">
+                <!-- Welcome Hero -->
+                <div class="welcome-hero" id="welcomeHero">
+                    <h2>Master Complex Knowledge Fast</h2>
+                    <p>Upload textbooks, lecture slides, research papers, or office documents. CogniStudy Pro indexes and grounds answers with exact page citations and multi-persona intelligence.</p>
+                    
+                    <div class="suggestion-chips">
+                        <button class="suggestion-chip" data-prompt="Explain Retrieval-Augmented Generation (RAG) with real-world analogies">
+                            💡 Explain RAG Architecture
+                        </button>
+                        <button class="suggestion-chip" data-prompt="What are the 4 study modes available in this platform?">
+                            🎓 Explain Available Study Modes
+                        </button>
+                        <button class="suggestion-chip" data-prompt="Generate 3 active recall questions with explanations from the notes">
+                            ⚡ Rapid Active Recall Q&A
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Bar -->
+            <div class="chat-input-wrapper">
+                <div class="input-box">
+                    <div id="activeModeChip" style="font-size: 11px; font-weight: 600; background: rgba(99, 102, 241, 0.2); color: #c7d2fe; padding: 4px 10px; border-radius: 999px; white-space: nowrap;">
+                        🎓 Student
+                    </div>
+                    <textarea 
+                        id="chatInput" 
+                        class="chat-textarea" 
+                        rows="1" 
+                        placeholder="Ask anything about your notes... (Shift+Enter for new line)"
+                    ></textarea>
+                    <button id="sendBtn" class="send-button" title="Send message (Enter)">
+                        <i class="bi bi-arrow-up"></i>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Citation Modal -->
+    <div class="modal-overlay" id="citationModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="citationModalTitle">Verified Source Citation</h3>
+                <button class="modal-close" id="closeCitationModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div style="font-size: 13px; color: var(--accent-cyan); margin-bottom: 8px;" id="citationSourceText">Source: Document</div>
+                <div style="background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border-subtle); padding: 16px; border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.6; color: #cbd5e1;" id="citationSnippetText">
+                    Snippet content...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz Generator Modal -->
+    <div class="modal-overlay" id="quizModal">
+        <div class="modal-content" style="max-width: 720px;">
+            <div class="modal-header">
+                <div>
+                    <h3 id="quizTitle">🎯 Active Recall Quiz</h3>
+                    <div style="font-size: 12px; color: var(--text-muted);" id="quizSubtitle">Derived strictly from uploaded knowledge</div>
+                </div>
+                <button class="modal-close" id="closeQuizModal">&times;</button>
+            </div>
+            <div class="modal-body" id="quizModalBody">
+                <div style="text-align: center; padding: 30px 0;">
+                    <div class="status-dot" style="margin: 0 auto 12px; width: 12px; height: 12px;"></div>
+                    <p style="color: var(--text-secondary);">Generating quiz from your documents...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Telegram Integration Modal -->
+    <div class="modal-overlay" id="telegramModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🤖 24/7 Telegram Assistant Setup</h3>
+                <button class="modal-close" id="closeTelegramModal">&times;</button>
+            </div>
+            <div class="modal-body" style="font-size: 14px; line-height: 1.6; color: var(--text-secondary);">
+                <p style="margin-bottom: 12px;">CogniStudy Pro is pre-configured with a 24/7 cloud webhook to receive files, process commands, and answer queries directly over Telegram!</p>
+                
+                <div style="background: rgba(0,0,0,0.4); padding: 14px; border-radius: 8px; border: 1px solid var(--border-subtle); margin-bottom: 14px;">
+                    <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">TELEGRAM STATUS</div>
+                    <div id="telegramStatusContent" style="font-family: monospace; color: #38bdf8;">Checking...</div>
+                </div>
+
+                <h5 style="color: white; margin-bottom: 6px;">Setup in 3 Steps:</h5>
+                <ol style="margin-left: 20px; margin-bottom: 14px;">
+                    <li>Create a bot on Telegram via <code>@BotFather</code> and copy your token.</li>
+                    <li>Add <code>TELEGRAM_BOT_TOKEN=&lt;YOUR_TOKEN&gt;</code> to your <code>.env</code> file.</li>
+                    <li>Set your webhook: <code>https://api.telegram.org/bot&lt;TOKEN&gt;/setWebhook?url=&lt;HOST&gt;/telegram-webhook</code></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast-msg" id="toastMsg">Notification message</div>
+
+    <!-- Application Script -->
+    <script src="./static/app.js"></script>
+</body>
+</html>

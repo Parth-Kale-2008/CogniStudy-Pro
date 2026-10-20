@@ -1,0 +1,21 @@
+# Introduction to Artificial Intelligence and RAG Architecture
+
+## Section 1: Retrieval-Augmented Generation (RAG)
+Retrieval-Augmented Generation (RAG) is an architectural framework that optimizes the output of Large Language Models (LLMs) by referencing an authoritative knowledge base outside of its training data before generating a response.
+
+### Core Stages of RAG:
+1. Ingestion: Loading raw documents (PDF, DOCX, TXT), cleaning formatting, and extracting text.
+2. Chunking: Splitting long texts into overlapping semantic passages (typically 500-1500 characters with 10-20% overlap) to preserve context boundaries.
+3. Embedding: Converting text chunks into high-dimensional dense vector embeddings using models such as OpenAI text-embedding-3-small.
+4. Indexing: Storing vector embeddings alongside chunk metadata in vector databases such as FAISS, Chroma, or Qdrant for sub-millisecond similarity search.
+5. Retrieval: Computing cosine or dot-product similarity between user query embeddings and stored document vectors to extract top-k relevant chunks.
+6. Generation: Constructing an augmented prompt combining retrieved context, system instructions, and user query, fed into an LLM for factual, grounded synthesis.
+
+## Section 2: Vector Search and FAISS
+FAISS (Facebook AI Similarity Search) is an open-source C++ and Python library designed for efficient similarity search and clustering of dense vectors. It supports exact L2 distance search (IndexFlatL2) and approximate nearest neighbor search (IndexIVFFlat, HNSW) capable of scaling to billions of vectors.
+
+## Section 3: Study Modes in Modern AI Tutors
+- Professor / Student Mode: Breaks down complex ideas into first principles, using real-world analogies and step-by-step mathematical reasoning.
+- Executive Mode: Focuses on actionable takeaways, strategic implications, bulleted summaries, and time-saving digests.
+- Researcher Mode: Emphasizes primary source citations, quotation evidence, scientific rigor, and confidence calibration.
+- Exam Cram Mode: Highlights active recall questions, mnemonic memory aids, and high-probability test topics.
